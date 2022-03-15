@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>БГПК | Электронное расписание</title>
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha512-oe8OpYjBaDWPt2VmSFR+qYOdnTjeV9QPLJUeqZyprDEQvQLJ9C5PCFclxwNuvb/GQgQngdCXzKSFltuHD3eCxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js" integrity="sha512-/n/dTQBO8lHzqqgAQvy0ukBQ0qLmGzxKhn8xKrz4cn7XJkZzy+fAtzjnOQd5w55h4k1kUC+8oIe6WmrGUYwODA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script src="js/popup.js"></script>
+        <script src="js/ajax.js"></script>
+        <script src="js/gettime.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+        <!-- Popup -->
+        <div class="popup-wrapper" style="display: none;">
+            <div class="popup-bg"> </div>
+            <div class="popup-window">
+                <div class="container">
+                    <!-- Close btn row -->
+                    <div class="row">
+                        <div class="col p-3 d-flex justify-content-end">
+                            <svg id="popup-close-btn" xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="black" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Table wrapper -->
+                    <div class="row">
+                        <div class="col">
+                            <table id="time-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>№</th>
+                                        <th>Время</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu container -->
+        <div class="container-fluid menu" style="background-color: #007A3D;">
+            <div class="row p-2">
+                <!-- Logo container -->
+                <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                    <a href="https://bgpk.edu22.info/">
+                        <div class="menu-logo"></div>
+                    </a>
+                </div>
+
+                <!-- Side menu center container -->
+                <div class="col-sm-5 d-flex align-items-center justify-content-center justify-content-sm-start my-sm-0 my-3">
+                    <p class="text-white m-0 side-menu-sch">Расписание звонков</p>
+                </div>
+
+                <!-- Side menu end container -->
+                <div class="current-group-wrapper col-sm-5 align-items-center justify-content-sm-end justify-content-center" style="display: none;">
+                    <p class="text-white m-sm-0 m-3 d-inline current-group-text">Текущая группа: <span></span></p>
+                    <span class="side-menu-change-group text-white ml-2 d-block float-right">Сменить</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress bg-white">
+            <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; display: none;"></div>
+        </div>
+        <!-- Main body -->
+        <div class="container">
+            <div class="row">
+                <div class="col p-0" style="height: 80vh; position: relative;">
+
+                    <!-- Login page -->
+                    <div id="login-page" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; display: none;">
+                        <div class="container-fluid" style="height: 100%; position: relative">
+                            <form class="d-flex flex-column align-items-center" id="login-form" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -40%); width: 660px;">
+                                <input id="login-form-input" type="text" style="width: 100%;" class="p-1" placeholder="Введите номер группы">
+                                <button type="button" id="login-form-submit" class="btn btn-success my-3" style="background-color: #007A3D;">Посмотреть расписание</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Main page -->
+                    <div id="main-page" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; display: none">
+                        <div class="container-fluid" style="height: 100%; position: relative;">
+                            <!-- Table nav -->
+                            <div class="row mt-5">
+                                <div class="col d-flex justify-content-between align-items-center">
+                                    <!-- Prev btn -->
+                                    <button id="prev" type="button" class="btn btn-success p-0 table-nav-btn d-inline-flex justify-content-center align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                                            <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+                                        </svg>
+                                    </button>
+    
+                                    <!-- Date picker -->
+                                    <div style="position: relative;">
+                                        <input id="datepicker" type="text" class="p-1 rounded" readonly>
+                                        <label for="datepicker" style="cursor: pointer;">
+                                            <svg style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                            </svg>
+                                        </label>
+                                    </div>
+                                    
+    
+                                    <!-- Next btn -->
+                                    <button id="next" type="button" class="btn btn-success p-0 table-nav-btn d-inline-flex justify-content-center align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+    
+                            <!-- Table wrapper -->
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="table-responsive">
+                                        <div class="table-disabler" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 1; display: none;"></div>
+                                        <table class="table table-striped table-bordered custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>№ урока</th>
+                                                    <th>Название предмета</th>
+                                                    <th>№ аудитории</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>  
+    </body>
+
+</html>

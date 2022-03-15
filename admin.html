@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>БГПК | Панель управления</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha512-oe8OpYjBaDWPt2VmSFR+qYOdnTjeV9QPLJUeqZyprDEQvQLJ9C5PCFclxwNuvb/GQgQngdCXzKSFltuHD3eCxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js" integrity="sha512-/n/dTQBO8lHzqqgAQvy0ukBQ0qLmGzxKhn8xKrz4cn7XJkZzy+fAtzjnOQd5w55h4k1kUC+8oIe6WmrGUYwODA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="js/admin.js" defer></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container-fluid menu" style="background-color: #007A3D;">
+        <div class="row p-2">
+            <!-- Logo container -->
+            <div class="col-sm-2 d-flex justify-content-center align-items-center">
+                <a href="https://bgpk.edu22.info/">
+                    <div class="menu-logo"></div>
+                </a>
+            </div>
+
+            <!-- Side menu center container -->
+            <div class="col-sm-5 d-flex align-items-center justify-content-center justify-content-sm-start my-sm-0 my-3">
+                <p class="text-white m-0 side-menu-sch menu-item-active">Добавление расписания</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container p-5">
+        <h1>Добавление расписания</h1>
+        <hr>
+
+        <h3>Выберите дату начала недели</h3>
+        <!-- Date picker -->
+        <div style="position: relative;">
+            <input id="datepicker" type="text" class="p-1 rounded" readonly>
+            <label for="datepicker" style="cursor: pointer;">
+                <svg style="position: absolute; top: 50%; transform: translateY(-50%) translateX(-30px)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                </svg>
+            </label>
+        </div>
+
+        <h3 class="mt-4">Выберите файл с расписанием</h3>
+        <form action="" id="schedule">
+            <input type="file" name="schedule" accept=".docx" multiple>
+        </form>
+
+        <div class="card bg-info text-white mt-4" style="max-width: 600px;">
+            <div class="card-header">Внимание!</div>
+            <div class="card-body">
+                <h5 class="card-title">Проверте правильность заполнения docx файла</h5>
+                <p class="card-text">Файл не должен содержать перенос строк в столбцах с названием предмета и номером кабинета.</p>
+                <p class="card-text">В случае ошибки, вы сможете заного загрузить измененный файл.</p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="button" class="btn text-white submit" style="background-color: #007A3D;">Загрузить расписание</button>
+        </div>
+
+        <div class="position-absolute bg-dark w-100 h-100 d-none justify-content-center align-items-center loader" style="top: 0; left: 0; opacity: 0.5">
+            <div class="spinner-border text-light" role="status" style="top: 50%; left: 50%;">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
